@@ -1,0 +1,46 @@
+{% extends 'article.html' %}
+
+{% block css %}
+    <style>
+        .article {
+            margin-top: 40px;
+            width: 400px;
+        }
+
+        .article > .title {
+            text-align: center;
+        }
+
+        .article > div {
+            margin-bottom: 10px;
+        }
+
+        .article > .el-button {
+            width: 100%;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div style="display: none" class="slide_or_actions" ref="slider"></div>
+
+    <div class="article">
+        <div class="title">
+            该内容需要访问权限
+        </div>
+        <el-input id="article_pwd" placeholder="请输入文章访问码" v-model="article_pwd">
+        </el-input>
+        <el-button type="primary" @click="article_pwd_show('{{ article_obj.nid }}')">查看</el-button>
+    </div>
+{% endblock %}
+
+
+
+
+{% block article_js %}
+    <script>
+        setTimeout(() => {
+            $('.slide_or_actions').remove()
+        }, 50);
+    </script>
+{% endblock %}

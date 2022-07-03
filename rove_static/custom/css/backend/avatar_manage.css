@@ -1,0 +1,48 @@
+.el-scrollbar__wrap {
+  overflow-x: hidden !important;
+}
+
+.avatar_list {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+}
+.avatar_list > li {
+  margin-bottom: 20px;
+  margin-right: 20px;
+  position: relative;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.avatar_list > li img {
+  width: 70px;
+  height: 70px;
+  display: block;
+}
+.avatar_list > li .delete_icon {
+  display: none;
+  height: 20px;
+  bottom: 0;
+  width: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  position: absolute;
+  justify-content: center;
+  align-items: center;
+}
+.avatar_list > li .delete_icon i {
+  color: whitesmoke;
+  cursor: pointer;
+}
+.avatar_list > li.no_avatar {
+  opacity: 0.6;
+}
+.avatar_list > li.no_avatar .delete_icon {
+  opacity: 0;
+  transition: all 0.3s;
+  display: flex;
+}
+.avatar_list > li.no_avatar:hover .delete_icon {
+  opacity: 1;
+}
+
+/*# sourceMappingURL=avatar_manage.css.map */

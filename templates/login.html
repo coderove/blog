@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale-1.0,user-scalable=no">
+
+    {% block title %}
+        <title>控制台|用户登录</title>
+    {% endblock %}
+    <link rel="stylesheet" href="/static/custom/css/reset.css">
+    <link rel="stylesheet" href="/static/custom/css/login.css">
+    <link rel="stylesheet" href="/static/element-ui/theme-chalk/index.css">
+    <link rel="stylesheet" href="/static/custom/css/match/login_register.css">
+
+</head>
+<body>
+<script src="/static/axios/axios.min.js"></script>
+<script src="/static/vue/vue.js"></script>
+<script src="/static/element-ui/index.js"></script>
+<div id="app">
+
+    <main>
+        <div class="left">
+            <div class="text">
+                <h2>Welcome &emsp; &emsp;<br>To Back!</h2>
+                <p>许多知识和技术博客分享等待您的到来，一起学习，一起进步!</p>
+            </div>
+        </div>
+        <div class="right">
+            <div class="header">
+                {% block header %}
+                    <h2>登录</h2>
+                    <p>没有账户吗？ <a href="/sign">创建你的账户</a></p>
+                {% endblock %}
+            </div>
+            <div class="login_forms">
+                <div class="login_forms_input">
+                    <div class="form_input">
+                        {% csrf_token %}
+                        {% block form_sign %}
+                            <label><input type="text" ref="login_form_name" v-model="login_form.name"
+                                          placeholder="请输入用户名/邮箱"></label>
+                            <label><input type="password" ref="login_form_pwd" v-model="login_form.pwd"
+                                          placeholder="请输入密码"></label>
+                            <div class="login_code">
+                                <label><input type="text" ref="login_form_code" v-model="login_form.code"
+                                              placeholder="请输入验证码"></label>
+                                <img @click="get_random_code" src="/static/custom/img/login/code.png" alt="">
+                            </div>
+                        {% endblock %}
+                    </div>
+                    <div class="flex">
+                        <div class="remember">
+                            <input type="checkbox" id="checked"><label for="checked">记住我</label>
+                        </div>
+                        <div class="forgot"><a href="#">忘记密码?</a></div>
+                    </div>
+                    {% block sign_button %}
+                        <div class="login_button">
+                            <button @click="login">登录</button>
+                        </div>
+                    {% endblock %}
+                </div>
+            </div>
+
+            <div class="login_other">
+                <div class="other_text">
+                    <p> 其他方式登录</p>
+                </div>
+                <div class="other_image">
+                    <img src="/static/custom/img/login/qq_icon.svg" alt="">
+                    <img src="/static/custom/img/login/wexin_icon.svg" alt="">
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<script>
+    axios.interceptors.request.use(request => {
+        if (request.method === 'post') {
+            request.headers['X-CSRFToken'] = document.querySelector('input[name="csrfmiddlewaretoken"]').value
+        }
+        return request
+    })
+    axios.interceptors.response.use(response => {
+        return response.data
+    })
+
+
+    new Vue({
+        el: '#app',
+        data: {
+            login_form: {
+                name: '',
+                pwd: '',
+                code: '',
+            },
+            sign_form: {
+                name: '',
+                pwd: '',
+                re_pwd: '',
+                code: '',
+            }
+        },
+        methods: {
+            //登录
+            login() {
+                axios.post('/api/login/', this.login_form).then(res => {
+                    if (res.code) {
+                        this.$message.error(res.msg)
+                        this.$refs[`login_form_${res.self}`].focus()
+                        return
+                    }
+                    this.$message.success(res.msg)
+                    //跳转首页
+                    setTimeout(() => {
+                        location.href = '/'
+                    }, 1000)
+                })
+            },
+            //注册
+            sign() {
+                axios.post('/api/sign/', this.sign_form).then(res => {
+                    if (res.code) {
+                        this.$message.error(res.msg)
+                        this.$refs[`sign_form_${res.self}`].focus()
+                        return
+                    }
+                    this.$message.success(res.msg)
+                    //跳转首页
+                    setTimeout(() => {
+                        location.href = '/'
+                    }, 1000)
+                })
+            },
+            //获取验证码
+            get_random_code(e) {
+                let date = new Date().getTime()
+                e.target.src = '/login/random_code/?timestamp=' + date
+            },
+        }
+    })
+</script>
+</body>
+</html>

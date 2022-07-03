@@ -1,0 +1,156 @@
+.pager {
+  list-style: none;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+.pager > li {
+  min-width: 30px;
+  height: 30px;
+  background-color: var(--bg_card);
+  border-radius: 5px;
+  transition: all 0.3s;
+  margin-right: 10px;
+  padding: 0 10px;
+}
+.pager > li:last-child {
+  margin: 0;
+}
+.pager > li a {
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  display: inline-flex;
+}
+.pager > li:hover {
+  background-color: var(--active_link);
+}
+.pager > li:hover a {
+  color: var(--bg_card);
+}
+.pager > li.active {
+  background-color: var(--active_link);
+}
+.pager > li.active a {
+  color: var(--bg_card);
+}
+
+.main {
+  width: 1200px;
+}
+.main .add_moods {
+  width: 100%;
+  margin-bottom: 20px;
+}
+.main .mood {
+  display: flex;
+  margin-bottom: 40px;
+}
+.main .mood > .left {
+  width: 90px;
+}
+.main .mood > .left img {
+  width: 70px;
+  height: 70px;
+  border-radius: 5px;
+}
+.main .mood > .right {
+  width: calc(100% - 90px);
+  background-color: var(--bg_card);
+  border-radius: 5px;
+  position: relative;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  padding: 10px 20px;
+}
+.main .mood > .right::before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: -20px;
+  top: 23px;
+  border-width: 10px;
+  border-style: solid;
+  border-color: transparent var(--bg_card) transparent transparent;
+}
+.main .mood > .right .name {
+  margin-bottom: 8px;
+}
+.main .mood > .right .content {
+  margin-bottom: 6px;
+}
+.main .mood > .right .drawing img {
+  height: 100px;
+  border-radius: 5px;
+  margin-right: 10px;
+}
+.main .mood > .right .info {
+  font-size: 14px;
+  display: flex;
+  justify-content: space-between;
+}
+.main .mood > .right .info .other_info > span {
+  cursor: pointer;
+  margin-right: 10px;
+}
+.main .mood > .right .info .other_info > span:last-child {
+  margin-right: 0;
+}
+.main .mood > .right .info .other_info .delete {
+  color: var(--font_delete);
+  cursor: pointer;
+}
+.main .mood > .right .sub_comment_list {
+  margin-top: 10px;
+  display: none;
+}
+.main .mood > .right .sub_comment_list li {
+  display: flex;
+}
+.main .mood > .right .sub_comment_list li .left {
+  width: 70px;
+}
+.main .mood > .right .sub_comment_list li .left img {
+  width: 50px;
+  height: 50px;
+  border-radius: 5px;
+  border: 1px solid var(--bg);
+}
+.main .mood > .right .sub_comment_list li .right {
+  width: calc(100% - 70px);
+}
+.main .mood > .right .sub_comment_list .rep_mood {
+  margin-top: 10px;
+  margin-left: 40%;
+  width: 20%;
+}
+.main .add_mood_content > div {
+  margin-bottom: 20px;
+}
+.main .add_mood_content > div > div, .main .add_mood_content > div > ul {
+  margin-top: 5px;
+}
+.main .add_mood_content > div img {
+  height: 50px;
+  width: 50px;
+  border-radius: 5px;
+}
+.main .add_mood_content > div .avatar_ul {
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+}
+.main .add_mood_content > div .avatar_ul .avatar_flex {
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+.main .add_mood_content > div .avatar_ul .avatar_flex .el-radio {
+  display: flex;
+  align-items: center;
+}
+.main .add_mood_content .show_drawing img {
+  width: initial;
+  margin-right: 10px;
+}
+
+/*# sourceMappingURL=moods.css.map */

@@ -1,0 +1,118 @@
+@media screen and (min-width: 1250px) {
+  #app .nav_dy {
+    padding: 0 90px;
+  }
+  #app .nav_dy > .left a:nth-last-child(2) {
+    display: none;
+  }
+}
+@media screen and (max-width: 1250px) and (min-width: 1050px) {
+  .notebook {
+    display: none;
+  }
+  main {
+    width: calc(100% - 180px);
+    padding: 20px 90px;
+  }
+  #app .nav_dy {
+    padding: 0 90px;
+  }
+  #app .nav_dy > .left a:nth-last-child(2) {
+    display: none;
+  }
+  #app header {
+    height: 600px;
+  }
+  #app header .dynamic_shuffl img {
+    height: 600px;
+  }
+  #app .main {
+    width: 1000px;
+    justify-content: center;
+  }
+  #app .main > .left {
+    width: 43%;
+    margin-right: 20px;
+  }
+  #app .main .left .essence_article .body ul li .left {
+    width: 0;
+    display: none;
+  }
+  #app .main .left .essence_article .body ul li .right {
+    width: 100%;
+  }
+  #app .main .left .all_article .body .all_article_ul li .left {
+    width: 40%;
+  }
+  #app .main .left .all_article .body .all_article_ul li .right {
+    width: 60%;
+  }
+  #app .article {
+    width: 100%;
+  }
+  #app .slide_or_actions {
+    z-index: 100;
+    width: 40px;
+    right: 50px;
+  }
+}
+@media screen and (max-width: 1050px) and (min-width: 850px) {
+  .netbook_min {
+    display: none;
+  }
+  main {
+    width: calc(100% - 120px);
+    padding: 20px 60px;
+  }
+  #app .nav_dy {
+    padding: 0 90px;
+  }
+  #app .nav_dy .left {
+    width: 80%;
+  }
+  #app .nav_dy > .left a:nth-last-child(2) {
+    display: none;
+  }
+  #app header {
+    height: 450px;
+  }
+  #app header .dynamic_shuffl img {
+    height: 600px;
+  }
+  #app .main {
+    width: 850px;
+  }
+  #app .main > .right {
+    width: 0;
+    display: none;
+  }
+  #app .main > .left {
+    width: 100%;
+    margin-right: 20px;
+  }
+  #app .main .left .essence_article .body ul li .left {
+    width: 40%;
+  }
+  #app .main .left .essence_article .body ul li .right {
+    width: 60%;
+  }
+  #app .main .left .all_article .body .all_article_ul li .left {
+    width: 25%;
+  }
+  #app .main .left .all_article .body .all_article_ul li .left img {
+    width: 100%;
+  }
+  #app .main .left .all_article .body .all_article_ul li .right {
+    width: 75%;
+  }
+  #app .article {
+    width: 100%;
+  }
+  #app .slide_or_actions {
+    z-index: 999;
+    width: 40px;
+    right: 30px;
+  }
+}
+
+/*# sourceMappingURL=notebook.css.map */

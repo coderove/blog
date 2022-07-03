@@ -1,0 +1,153 @@
+@import "./pager";
+
+.main {
+  width: 1200px;
+
+  .add_moods {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .mood {
+    display: flex;
+    margin-bottom: 40px;
+
+    > .left {
+      width: 90px;
+
+      img {
+        width: 70px;
+        height: 70px;
+        border-radius: 5px;
+      }
+    }
+
+    > .right {
+      width: calc(100% - 90px);
+      background-color: var(--bg_card);
+      border-radius: 5px;
+      position: relative;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+      padding: 10px 20px;
+
+      &::before {
+        content: '';
+        display: block;
+        position: absolute;
+        left: -20px;
+        top: 23px;
+        border-width: 10px;
+        border-style: solid;
+        border-color: transparent var(--bg_card) transparent transparent;
+      }
+
+      .name {
+        margin-bottom: 8px;
+      }
+
+      .content {
+        margin-bottom: 6px;
+      }
+
+      .drawing {
+        img {
+          height: 100px;
+          border-radius: 5px;
+          margin-right: 10px;
+        }
+      }
+
+      .info {
+        font-size: 14px;
+        display: flex;
+        justify-content: space-between;
+
+        .other_info {
+          > span {
+            cursor: pointer;
+            margin-right: 10px;
+
+            &:last-child {
+              margin-right: 0;
+            }
+          }
+
+          .delete {
+            color: var(--font_delete);
+            cursor: pointer;
+          }
+        }
+
+      }
+
+      .sub_comment_list {
+        margin-top: 10px;
+        display: none;
+
+        li {
+          display: flex;
+
+          .left {
+            width: 70px;
+
+            img {
+              width: 50px;
+              height: 50px;
+              border-radius: 5px;
+              border: 1px solid var(--bg);
+            }
+          }
+
+          .right {
+            width: calc(100% - 70px);
+          }
+        }
+
+        .rep_mood {
+          margin-top: 10px;
+          margin-left: 40%;
+          width: 20%;
+        }
+      }
+
+    }
+  }
+
+  .add_mood_content {
+    > div {
+      margin-bottom: 20px;
+
+      > div, > ul {
+        margin-top: 5px;
+      }
+
+      img {
+        height: 50px;
+        width: 50px;
+        border-radius: 5px;
+      }
+
+      .avatar_ul {
+        display: flex;
+        flex-wrap: wrap;
+        list-style: none;
+
+        .avatar_flex {
+          margin-right: 10px;
+          margin-bottom: 10px;
+
+          .el-radio {
+            display: flex;
+            align-items: center;
+          }
+        }
+      }
+    }
+    .show_drawing{
+      img{
+        width: initial;
+        margin-right: 10px;
+      }
+    }
+  }
+}

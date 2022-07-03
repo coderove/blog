@@ -1,0 +1,119 @@
+@import "editor_md_dark.css";
+@import "../backend/backend_dark.css";
+
+:root {
+    /*渐变*/
+    /*后端 -- 圆*/
+    --gc_blue_red_circle: linear-gradient(to right, rgb(198, 255, 221), rgb(251, 215, 134), rgb(247, 121, 125)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    --gc_blue_red: linear-gradient(to right, rgb(18, 194, 233), rgb(196, 113, 237), rgb(246, 79, 89)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /*前端*/
+    --gc_green: linear-gradient(to right, rgb(12, 235, 235), rgb(32, 227, 178), rgb(41, 255, 198)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /*项目相关*/
+    --gc_ora_blue: linear-gradient(to right, rgb(255, 216, 155), rgb(25, 84, 123)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    /*回忆录*/
+    --gc_green_ora: linear-gradient(to bottom, rgb(17, 67, 87), rgb(242, 148, 146)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    /*查看详情*/
+    --detail: #71c9ce;
+    /*标签云*/
+    --three_role: #393e46;
+
+    --left_font_color: #e3fdfd;
+    --left_label: #ff2e63;
+    --tag_default_color: #384259;
+    /*第二组*/
+    --left_label_2n: #ac73ff;
+    --tag_2n_color: #fce38a;
+    /*第三组*/
+    --left_label_2n_3: #11d3bc;
+    --tag_2n_3_color: #fffcca;
+
+    /*选择框选中*/
+    --select_back_color: #e0fcff;
+
+     /*history 描述desc*/
+    --font_history_desc :#c3bef0;
+
+     /*search 分页器选中下的a的颜色*/
+    --font_search_a:#f73859;
+
+    /*主背景          bg*/
+    --bg: #222831;
+    --bg_plus: #000000;
+    /*模块背景        --bg_card */
+    --bg_card: #393e46;
+    /*链接       */
+    --active_link: #51dacf;
+    /*字体颜色不同等级*/
+    --font_first: #f6f6f6;
+    --font_second: #fcfefe;
+    --font_third: #52616b;
+    --font_delete: #f20c00;
+
+    /*element ui*/
+    --ele_bg: var(--bg);
+    --ele_placeholder: #515154; /*提示字体*/
+}
+/******el-button*********/
+.el-button {
+    background: #444f5a !important;
+    border: 1px solid #444f5a !important;
+    color: #fcfefe !important;
+}
+
+.el-button:focus,.el-button:hover {
+    color: #f9f7f7 !important;
+    border-color: #444f5a !important;
+    background-color: #393e46 !important;
+}
+
+.el-button:active {
+    color: #222831 !important;
+    border-color: #444f5a !important;
+}
+/***************文章详情页 留言按钮*****************/
+.ui.teal.button, .ui.teal.buttons .button {
+    background-color: #444f5a;
+    color: #fcfefe;
+}
+
+.ui.teal.button:hover,.ui.teal.buttons .button:hover {
+    background-color: #393e46 !important;
+}
+
+.ui.teal.button:focus,.ui.teal.buttons .button:focus {
+    background-color: #393e46 !important;
+}
+
+.ui.teal.button:active,.ui.teal.buttons .button:active {
+    background-color: #393e46 !important;
+}
+
+/****************目录面板*******************/
+
+.el-popover {
+    background: var(--bg_card);
+    border: 1px solid var(--bg);
+    color: var(--font_second);
+}
+
+.el-popover__title {
+    color: var(--font_first) ;
+}
+
+/***右边三角**/
+.el-popper[x-placement^=left] .popper__arrow::after {
+    border-left-color: var(--bg_card);
+}
+
+.el-popper[x-placement^=left] .popper__arrow {
+    border-left-color: var(--bg_card);
+}
+
+/***********typo***************/
+.typo h1,.typo  h2,.typo  h3,.typo  h4,.typo  h5,.typo  h6 {
+  color: var(--font_second);
+}
+.typo strong, .typo  b {
+    color: #00e0ff;
+}

@@ -1,0 +1,19 @@
+{% extends 'backend/backend.html' %}
+{% block css %}
+    <link rel="stylesheet" href="/static/custom/css/backend/edit_avatar.css">
+{% endblock %}
+
+
+{% block content %}
+    <ul class="avatar_ul" avatar_nid="{{ avatar_id }}">
+        {% for avatar in avatar_list %}
+            <li class="avatar_flex">
+                <el-radio v-model="edit_avatar_id" :label="{{ avatar.nid }}"><img
+                        src="{{ avatar.url.url }}" alt="">
+                </el-radio>
+            </li>
+        {% endfor %}
+    </ul>
+    <el-button type="danger" plain @click="edit_avatar_method">修改头像</el-button>
+{% endblock %}
+

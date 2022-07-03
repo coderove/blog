@@ -1,0 +1,28 @@
+@media screen and (max-width: 1050px) and (min-width: 850px) {
+  #app main {
+    width: 800px;
+  }
+  #app main > .right {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 850px) {
+  #app main {
+    width: 400px;
+  }
+  #app main > .left {
+    width: 0;
+    display: none;
+  }
+  #app main > .right {
+    width: 100%;
+  }
+  #app main > .right .login_other .other_text::after {
+    width: 147px;
+  }
+  #app main > .right .login_other .other_text::before {
+    width: 117px;
+  }
+}
+
+/*# sourceMappingURL=login_register.css.map */

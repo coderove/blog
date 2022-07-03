@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale-1.0,user-scalable=no">
+    <title>源游</title>
+    <link rel="stylesheet" href="/static/custom/css/reset.css">
+    <link rel="stylesheet" href="/static/custom/css/base.css">
+
+    <link rel="stylesheet" href="/static/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" href="/static/element-ui/theme-chalk/index.css">
+    {% block css %}
+    <link rel="stylesheet" href="/static/custom/css/index.css">
+    {% endblock %}
+    <link rel="stylesheet" href="/static/custom/css/match/notebook.css">
+    <link rel="stylesheet" href="/static/custom/css/match/phone.css">
+
+    {% load custom_tags my_filter %}
+</head>
+
+<body>
+        <script src="/static/axios/axios.min.js"></script>
+        <script src="/static/vue/vue.js"></script>
+        <script src="/static/jquery/jquery.min.js"></script>
+        <script src="/static/element-ui/index.js"></script>
+    <div id="app">
+
+        <link rel="stylesheet" :href="'/static/custom/css/theme/'+defaultTheme+'.css'">
+
+        {#顶部#}
+          <el-drawer
+                style="display: none"
+                custom-class="nav_drawer_class"
+                title=""
+                :visible.sync="nav_drawer"
+                size="40%"
+                @close="nav_close"
+                @open="nav_open"
+                :modal="false"
+                :with-header="false"
+                direction="ltr">
+                <div class="nav_content">
+                    <div class="title">
+                        <img src="/static/custom/img/comment/boy_1.svg" alt="">
+                        <h2>星游个人博客</h2>
+                    </div>
+                    <div class="content">
+                        <a href="/">首页</a>
+                        <a href="/moods">心情</a>
+                        <a href="/history">回忆录</a>
+                        <a href="/search">文章检索</a>
+                        <a href="/sites">网站导航</a>
+                        <a href="/about">关于</a>
+                    </div>
+                </div>
+            </el-drawer>
+            <nav class="nav_dy">
+            <div class="left" id="dynamic_nav">
+                <a href="/">首页</a>
+                <a href="/moods">心情</a>
+                <a href="/history">回忆录</a>
+                <a href="/search">文章检索</a>
+                <a href="/sites">网站导航</a>
+                <a href="/about">关于</a>
+                <a @click="nav_drawer = true" href="javascript:void(0);"><i class="fa fa-align-justify"></i></a>
+                {% block search %}
+                <div class="search">
+                    <input type="text" @keydown.enter="search()" v-model="search_key" class="search_box"
+                        placeholder="搜索你想要的内容">
+                    <button @click="search()"><i class="fa fa-search"></i></button>
+                </div>
+                {% endblock %}
+            </div>
+            <div class="right">
+                <img v-show="defaultTheme === 'light'" src="/static/custom/img/nav/light.svg" @click="setTheme('dark')"
+                    alt="">
+                <img v-show="defaultTheme === 'dark'" src="/static/custom/img/nav/dark.svg" @click="setTheme('light')"
+                    alt="">
+
+                {% if request.user.username %}
+                {# <a href="">{{ request.user.username }}</a>#}
+                <el-dropdown>
+                    <span class="el-dropdown-link">
+                        {{ request.user.username }}<i class="el-icon-arrow-down el-icon--right"></i>
+                    </span>
+                    <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item><a href="/backend/">个人中心</a></el-dropdown-item>
+                        <el-dropdown-item><a href="/backend/edit_avatar/">修改头像</a></el-dropdown-item>
+                        {% if request.user.is_superuser %}
+                        <el-dropdown-item><a href="/backend/add_article/">添加文章</a></el-dropdown-item>
+                        <el-dropdown-item><a href="/admin/">后台管理</a></el-dropdown-item>
+                        {% endif %}
+                        <el-dropdown-item><a href="/logout/">注销</a></el-dropdown-item>
+                    </el-dropdown-menu>
+                </el-dropdown>
+                {% else %}
+                <a href="/login">控制台</a>
+                {% endif %}
+            </div>
+        </nav>
+        {#轮播图#}
+        {% block banner %}
+        {% broadcastMap 'index' %}
+        {% endblock %}
+
+        {#内容区域#}
+
+        <main>
+            {% csrf_token %}
+            {% block main %}
+            <div class="main">
+                <div class="left">
+                    <div class="essence_article card">
+                        <div class="title">
+                            <h2>精选文章</h2>
+                            <div class="switch_article_category">
+                                <span :active="this_category_position === 'front-end'"
+                                    @click="switch_article_category('front-end')">前端</span>
+                                <span :active="this_category_position === 'end-front'"
+                                    @click="switch_article_category('end-front')">后端</span>
+                            </div>
+                        </div>
+                        <div class="body">
+                            <ul v-show="this_category_position === 'front-end'" class="front-end">
+                                {% for front_end in front_end_list %}
+                                <li>
+                                    <div class="left">
+                                        <div>
+                                            <img src="{{ front_end.cover.url.url }}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="right">
+                                        <h2><a href="/article/{{ front_end.nid }}/">{{ front_end.title }}</a>
+                                        </h2>
+                                        <p>{{ front_end.abstract }}</p>
+                                        <span>{{ front_end.create_date|date_format }}</span>
+                                    </div>
+                                </li>
+                                {% endfor %}
+
+
+                            </ul>
+                            <ul v-show="this_category_position === 'end-front'" class="end-front">
+                                {% for end_front in end_front_list %}
+                                <li>
+                                    <div class="left">
+                                        <div>
+                                            <img src="{{ end_front.cover.url.url }}" alt="">
+                                        </div>
+                                    </div>
+                                    <div class="right">
+                                        <h2><a href="/article/{{ end_front.nid }}/">{{ end_front.title }}</a>
+                                        </h2>
+                                        <p>{{ end_front.abstract }}</p>
+                                        <span>{{ end_front.create_date|date_format }}</span>
+                                    </div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="hotList card">
+                        <div class="title">
+                            <h2 id="anchor_point">今日热搜</h2>
+                            <div>
+                                <a href="#">查看更多</a>
+                            </div>
+                        </div>
+                        <div class="body">
+                            主要内容
+                        </div>
+                    </div>
+                    <div class="all_article card">
+                        <div class="title">
+                            <h2>博客文章</h2>
+                        </div>
+                        <div class="body">
+                            {% if request.user.is_superuser %}
+                            <el-dialog title="修改文章封面" :visible.sync="edit_cover_index_dialogVisible" width="30%">
+                                <div class="dialog_content">
+                                    <div>
+                                        <label for="">文章封面</label>
+                                        <el-select v-model="edit_cover.nid" placeholder="请选择文章封面">
+                                            {% for cover in cover_list %}
+                                            <el-option label="{{ cover.url.url }}" value="{{ cover.nid }}">
+                                                <img src="{{ cover.url.url }}" alt="">
+                                            </el-option>
+                                            {% endfor %}
+                                        </el-select>
+                                    </div>
+                                </div>
+                                <span slot="footer" class="dialog-footer">
+                                    <el-button @click="edit_cover_index_dialogVisible = false">取 消</el-button>
+                                    <el-button type="primary" @click="edit_cover_index_method(edit_cover.aid)">确 定
+                                    </el-button>
+                                </span>
+                            </el-dialog>
+                            {% endif %}
+                            <ul class="all_article_ul">
+
+                                {% for article in article_list %}
+                                <li>
+                                    {% if article.category %}
+                                    <div class="category_flag" len="{{ article.get_category_display|length }}"
+                                        type="{{ article.get_category_display }}">
+                                        {{ article.get_category_display }}
+                                    </div>
+                                    {% endif %}
+                                    <div class="left">
+                                        <div>
+                                            <el-image
+                                                @contextmenu.ctrl.prevent="show_edit_cover_index('{{ article.nid }}','{{ article.cover.nid }}')"
+                                                src="{{ article.cover.url.url }}" alt="" lazy> </el-image>
+                                        </div>
+                                    </div>
+
+                                    <div class="right">
+                                        <h2><a href="/article/{{ article.nid }}/">{{ article.title }}</a></h2>
+                                        <p>{{ article.abstract }}</p>
+                                        <div class="article_info">
+                                            <span>
+                                                <i class="far fa-clock"></i> {{ article.create_date|date:'Y-m-d' }}
+                                            </span>
+                                            <span class="netbook_min phone_550 phone_850">
+                                                <i class="fas fa-thumbs-up"></i> {{ article.digg_count }}
+                                            </span>
+
+                                            <span class="notebook phone_550 phone_850">
+                                                <i class="far fa-eye"></i> {{ article.look_count }}
+                                            </span>
+
+                                            <span class="notebook phone_550 phone_850">
+                                                <i class="fas fa-comments"></i>{{ article.comment_count }}
+                                            </span>
+
+                                            <span class="netbook_min phone_550">
+                                                <i class="fas fa-star-half-alt"></i>{{ article.collects_count }}
+                                            </span>
+                                            {% if article.pwd %}
+                                            <span>
+                                                <i class="fa fa-lock" style="color: red"></i>
+                                            </span>
+                                            {% endif %}
+                                        </div>
+
+                                    </div>
+
+                                </li>
+                                {% endfor %}
+                            </ul>
+                            <ul class="pager">
+                                {{ pager.page_html|safe }}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="right">
+                    {% if advert_list.count %}
+                    <div class="advertisement card">
+                        <div class="title">
+                            <h2>展示</h2>
+                            <div>
+                                <a href="#">show</a>
+                            </div>
+                        </div>
+                        <div class="body">
+                            <el-carousel :interval="5000" class="adv_img_list" height="160px">
+                                {% for advert in advert_list|generate_advert %}
+                                <el-carousel-item>
+                                    <a title="{{ advert.title }}" href="{{ advert.href }}" target="_blank">
+                                        <img src="{{ advert.url }}" alt="">
+                                    </a>
+                                </el-carousel-item>
+                                {% endfor %}
+                            </el-carousel>
+                            {# {% generate_advert advert_list %}#}
+                            {# <div><a href="#" target="_blank"><img src="" alt=""></a></div>#}
+                        </div>
+                    </div>
+                    {% endif %}
+                    <div class="tags_cloud card">
+                        <div class="title">
+                            <h2>标签云</h2>
+                        </div>
+                        <div class="body">
+                            <ul>
+                                {% for tag in tag_list %}
+                                <div class="tags_show">
+                                    <div class="first_div">
+                                        <i class="tag_size fas fa-crown"></i>
+                                        <i>{{ tag.title }}</i>
+                                    </div>
+                                    <span>{{ tag.articles_set.count }}</span>
+                                </div>
+
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="site_info card">
+                        <div class="title">
+                            <h2>站点信息</h2>
+                        </div>
+                        <div class="body">
+                            <div class="item"><b>建站时间:</b> <span>2022年6月26日</span></div>
+                            <div class="item"><b>在线人数:</b> <span>{{ online_count }}</span></div>
+                            <div class="item"><b>文章总数:</b> <span>{% calculate_category_count 0 %}</span></div>
+                            <div class="item"><b>前端文章:</b> <span>{% calculate_category_count 1 %}</span></div>
+                            <div class="item"><b>后端文章:</b> <span>{% calculate_category_count 2 %}</span></div>
+                            <div class="item"><b>项目相关:</b> <span>{% calculate_category_count 3 %}</span></div>
+                            <div class="item"><b>网站空间:</b> <span>腾讯云服务器</span></div>
+                            <div class="item"><b>订阅内容:</b>
+                                <div class="images">
+                                    <div class="qq">
+                                        <div class="el-image"><img src="/static/custom/img/footer/qq_ewm.jpg" alt="我的QQ"
+                                                class="el-image__inner el-image__preview">
+                                        </div>
+                                        QQ
+                                    </div>
+                                    <div class="qq">
+                                        <div class="el-image"><img src="/static/custom/img/footer/wx.png" alt="我的微信"
+                                                class="el-image__inner el-image__preview">
+                                        </div>
+                                        微信
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="feedback card">
+                        <div class="title">
+                            <h2>意见反馈</h2>
+                        </div>
+                        <div class="body">
+
+                            <el-input id="feedback__email" placeholder="请输入用于接收反馈的邮箱" v-model="feedback.email">
+                            </el-input>
+
+                            <el-input id="feedback__content" type="textarea" resize="none" :rows="4"
+                                placeholder="请输入你的反馈内容" v-model="feedback.content">
+                            </el-input>
+
+                            <el-button type="primary" @click="send_feedback">确 定</el-button>
+
+                        </div>
+                    </div>
+                    <div class="friend_links card">
+                        <el-dialog title="申请友链" :visible.sync="friend_links_dialogVisible" width="30%">
+                            <div class="dialog_content">
+                                <div>
+                                    <label for="site_add__title">网站标题</label>
+                                    <el-input id="site_add__title" placeholder="请输入你的网站标题" v-model="site_info.title">
+                                    </el-input>
+                                </div>
+                                <div>
+                                    <label for="site_add__abstract">网站简介</label>
+                                    <el-input id="site_add__abstract" type="textarea" resize="none" :rows="4"
+                                        placeholder="请输入你的网站简介，将会展示给其他用户。" v-model="site_info.abstract">
+                                    </el-input>
+                                </div>
+                                <div>
+                                    <label for="site_add__href">网站链接</label>
+                                    <el-input id="site_add__href" placeholder="请输入你的网站链接" v-model="site_info.href">
+                                    </el-input>
+                                </div>
+                                <div>
+                                    <label for="site_add__icon_href">网站图标</label>
+                                    <div style="display: flex">
+                                        <el-input id="site_add__icon_href" placeholder="请输入你的网站图标的在线链接，将会展示给其他用户。"
+                                            class="icon_href" v-model="site_info.icon_href">
+                                        </el-input>
+                                        <div class="icon_img">
+                                            <img :src="site_info.icon_href" alt="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <span slot="footer" class="dialog-footer">
+                                <el-button @click="friend_links_dialogVisible = false">取 消</el-button>
+                                <el-button type="primary" @click="friend_link_add">确 定</el-button>
+                            </span>
+                        </el-dialog>
+                        <div class="title">
+                            <h2>友情链接</h2>
+                            <div><a href="javascript:void (0)" @click="friend_links_dialogVisible =true">申请</a></div>
+                        </div>
+                        <div class="body">
+                            <ul>
+                                {% for link in link_list %}
+                                <li> <a href="{{ link.href }}" target="_blank">{{ link.title }}</a> </li>
+
+                                {% endfor %}
+
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endblock %}
+        </main>
+        {#底部#}
+        <footer>
+            <div class="left">
+                <p class="Introduction">星游的个人博客</p>
+                <p class="site_info">
+                    <span><img src="/static/custom/img/footer/tencent.png" alt="">腾讯云服务器</span>
+                    <span><img src="/static/custom/img/footer/tencent.png" alt="">腾讯云SSL证书</span>
+                    <span><img src="/static/custom/img/footer/qiniu.png" alt="">七牛云存储</span>
+                </p>
+                <p class="version">
+                    <span>version</span>
+                    <span>1.0.0</span>
+                </p>
+                <p>建站日期：2022-6-6</p>
+                <p class="beian">
+                    <a href="https://beian.miit.gov.cn/"><img src="/static/custom/img/footer/badges.png" alt="">备案号
+                        xxx</a>
+                </p>
+            </div>
+
+            <div class="right">
+                <div class="contact">
+                    <div>
+                        <img class="svg" src="/static/custom/img/footer/QQ.svg" alt="">
+                        <img class="qq" src="/static/custom/img/footer/qq_ewm.jpg" alt="">
+                    </div>
+                    <div>
+                        <a href="https://github.com/coderove"><img class="svg"
+                                src="/static/custom/img/footer/github.svg" alt=""></a>
+                    </div>
+                    <div>
+                        <a href="https://gitee.com/starrove"><img class="svg" src="/static/custom/img/footer/gitee.svg"
+                                alt=""></a>
+                    </div>
+                </div>
+                <p>联系邮箱:coderove@qq.com</p>
+            </div>
+
+        </footer>
+
+    </div>
+    <script>
+
+        axios.interceptors.request.use(request => {
+            if (request.method !== 'get') {
+                request.headers['X-CSRFToken'] = document.querySelector('input[name="csrfmiddlewaretoken"]').value
+            }
+            return request
+        })
+        axios.interceptors.response.use(response => {
+            return response.data
+        })
+
+        //动态导航栏
+        function dynamic_navigation() {
+            let a_list = document.querySelectorAll('#dynamic_nav>a')
+            let path = location.pathname
+            for (const a of a_list) {
+                let a_href = a.getAttribute('href')
+                if (a_href === path || a_href + '/' === path) {
+                    a.classList.add('active')
+                }
+            }
+        }
+
+        dynamic_navigation()
+        var vue = new Vue({
+            el: "#app",
+            delimiters: ["[[", "]]"],//改变vue的规则
+            data: {
+                max_dialog_width:'50%',//弹窗宽度
+                min_dialog_width:'30%',//弹窗宽度
+                nav_drawer : false, //手机适配侧边栏
+                defaultTheme: "light", //默认主题
+                this_category_position: "front-end",//当前所在的位置
+                comment_content: '',//评论内容
+
+                slide_list: [],//目录表
+                slide_text: '显示悬浮目录',//
+                search_key: '',//搜索内容
+                mood_dialogVisible: false,//发布心情
+                add_mood: { //心情内容
+                    name: '',
+                    avatar_id: null,
+                    content: '',
+                    drawing: '',
+                },
+                mood_show_drawing: [], //多张图片预览
+                mood_comment_dialogVisible: false,//评论弹窗
+                add_mood_comment: { //回复心情内容
+                    name: '',
+                    content: '',
+                },
+                history_dialogVisible: false, //添加回忆录弹窗
+                history: {
+                    title: '',
+                    create_date: new Date(),
+                    content: '',
+                    drawing: '',
+                },
+                history_edit_add: false,//默认编辑
+                history_show_drawing: [],//回忆录列表
+                history_pickerOptions: {
+                    disabledDate(time) {
+                        return time.getTime() > Date.now();
+                    }
+                },//日期选择器
+                site_title: {
+                    site_title: ''
+                },//添加标签的名字
+                site_dialogVisible: false, //添加标签弹窗
+                site_edit_add: false,//默认编辑
+                site_tag_tab: '推荐',//默认展示推荐
+                site_tag_data: [],//标签数据
+                site_add_dialogVisible: false, //去添加标签弹窗
+                site_info: {
+                    title: '',
+                    abstract: '',
+                    href: '',
+                    icon_href: '',
+                    tag: [],
+                },//添加网站需要的数据
+                site_edit_add_other: false,//默认添加网站
+                site_order: 'create_date',//默认排序--最新
+                friend_links_dialogVisible: false,//友链
+                feedback: {
+                    email: '',
+                    content: '',
+                },//意见反馈
+                article_pwd: '',//文章密码
+                edit_cover_index_dialogVisible: false,//首页快捷修改封面
+                edit_cover: {
+                    nid: '',//封面id
+                    aid: '', //文章id
+                },
+            },
+            created() {
+
+                    this.init_dialog_width()
+                this.init()//读取内存信息
+                let path = location.pathname
+                if (path.indexOf('article') !== -1) {
+
+                }
+                if (path.indexOf('search') !== -1) {
+                    this.init_search_key()//初始化搜索框
+                }
+                if (path.indexOf('sites') !== -1) {
+                    this.init_site()//初始化网站导航
+                }
+
+                setTimeout(() => {
+                    this.get_sidebar()
+
+                    this.code_copy()//代码复制
+                }, 200)
+            },
+            mounted() {
+
+            },
+            methods: {
+                //初始化dialog的大小
+                init_dialog_width(){
+                    let w = $(document).width()
+                if(w>850){
+                }else if(w>700){
+                   this.max_dialog_width='70%'
+
+                }else if(w>500){
+                   this.max_dialog_width='80%'
+                   this.min_dialog_width='50%'
+
+                }else if(w>400){
+                   this.max_dialog_width='90%'
+                   this.min_dialog_width='70%'
+
+                }else{
+                   this.max_dialog_width='100%'
+                   this.min_dialog_width='90%'
+                }
+                },
+
+                //初始化内存信息
+                init() {
+                    let theme = localStorage.getItem("theme")
+                    if (theme) {
+                        this.defaultTheme = theme
+                    }
+                    let categoryPosition = localStorage.getItem("categoryPosition")
+                    if (categoryPosition) {
+                        this.this_category_position = categoryPosition
+                    }
+                },
+                //设置主题
+                setTheme(themeName) {
+                    this.defaultTheme = themeName
+                    localStorage.setItem("theme", themeName)//持久化
+                },
+                //图片加载失败处理
+                img_error(e) {
+                    e.target.style.display = 'none'
+                },
+                //首页打开侧边栏菜单
+                nav_open(){
+                    $('nav,.my_header,main,footer').addClass('open')
+                },
+                //首页关闭侧边栏菜单
+                nav_close(){
+                    $('nav,.my_header,main,footer').removeClass('open')
+                },
+                //选择文章分类
+                switch_article_category(categoryName) {
+                    this.this_category_position = categoryName
+                    localStorage.setItem("categoryPosition", categoryName)//持久化
+                },
+                //发布评论
+                add_comment(nid) {
+                    axios.post(`/api/article/comment/${nid}/`, { content: this.comment_content }).then(res => {
+                        if (res.code) {
+                            if (res.self) {
+                                this.$refs[`comment_${res.self}`].focus()
+                            }
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        //500ms后刷新
+                        setTimeout(() => {
+                            location.reload()
+                        }, 500)
+                    })
+                },
+                //@被评论人placeholder
+                set_sub_placeholder(div, username, cid) {
+                    $(div).find('textarea').attr('placeholder', `@${username}`)
+                    $(div).find('textarea').attr('cid', cid)
+                },
+                //展示子评论
+                show_sub_comment_list(e, username, cid) {
+                    let div = $(e.target).parent().parent().next()
+                    $(div).slideToggle()
+                    this.set_sub_placeholder(div, username, cid)
+                },
+                //子评论回复
+                sub_comment_set_placeholder(e, username, cid) {
+                    let div = $(e.target).parents('.sub_comment_list')
+                    this.set_sub_placeholder(div, username, cid)
+                },
+                //子评论提交
+                add_sub_comment(e, nid) {
+                    axios.post(`/api/article/comment/${nid}/`, {
+                        content: $(e.target).prev().val(),
+                        pid: $(e.target).prev().attr('cid')
+                    }).then(res => {
+                        if (res.code) {
+                            if (res.self) {
+                                this.$refs[`sub_comment_${res.self}`].focus()
+                            }
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        setTimeout(() => {
+                            //500ms后刷新
+                            location.reload()
+                        }, 500)
+                    })
+                },
+                //评论--子评论
+                delete_sub_comment(nid, aid, root_comment_id) {
+                    this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.delete(`/api/article/comment/${nid}/`, {
+                            data: {
+                                aid,
+                                pid: root_comment_id
+                            }
+                        }).then(res => {
+                            if (res.code) {
+                                this.$message.error(res.msg)
+                                return
+                            }
+                            this.$message.success(res.msg)
+                            setTimeout(() => {
+                                location.reload()
+                            }, 500)
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '取消删除'
+                        });
+                    });
+
+                },
+                //评论点赞
+                comment_digg(e, nid) {
+                    axios.post(`/api/comment_digg/${nid}/`).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        e.target.innerHTML = ` ${res.data}`
+                        this.$message.success(res.msg)
+                    })
+                },
+                //文章点赞
+                article_digg(e, nid) {
+                    let dom = e.target
+                    dom.classList.add('show')
+                    axios.post(`/api/article/digg/${nid}/`).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        $(dom).next().text(res.data)
+                        this.$message.success(res.msg)
+                    })
+
+                    let timer = null
+                    clearTimeout(timer)
+                    timer = setTimeout(() => {
+                        dom.classList.remove('show')
+                    }, 1000)
+                },
+                //文章收藏
+                article_collects(e, nid) {
+                    let dom = e.target
+                    axios.post(`/api/article/collects/${nid}/`).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        $(dom).next().text(res.data)
+                        this.$message.success(res.msg)
+                        if (res.isCollects) {
+                            console.log(438)
+                            dom.classList.add('show')
+                            return
+                        }
+                        dom.classList.remove('show')
+                    })
+                },
+                //回到顶部
+                goto_top() {
+                    $('html,body').animate({
+                        scrollTop: 0
+                    }, 'slow')
+                },
+
+                //悬浮目录内容
+                get_sidebar() {
+                    let content = $('#article_content')
+                    let h_list = content.children('h1,h2,h3,h4')
+                    let lis = []
+                    for (let i = 0; i < h_list.length; i++) {
+                        let c = h_list[i].innerText
+                        let tagName = h_list[i].tagName
+                        let tagId = h_list[i].id
+                        let ele = {
+                            tagName,
+                            c,
+                            pos: '#' + tagId
+                        }
+                        lis.push(ele)
+                    }
+                    this.slide_list = lis
+                },
+                //目录定位到内容
+                go_side_bar(selector, e) {
+                    $('.el-popover >p').css('color', '')
+                    e.target.style.color = ' #00d95a'
+                    let box = $(selector)
+                    let pos = box.offset()
+                    pos.top = pos.top - 80
+                    $('html,body').animate({ scrollTop: pos.top }, 600)
+
+                },
+                //文章 代码段复制
+                code_copy() {
+                    $('pre').each(function () {
+                        let copy = $('<i title="copy" class="el-icon-document-copy code-copy"></i>')
+                        $(this).append(copy)
+                    })
+                    $('pre i.code-copy').click(e => {
+                        let text_list = $(e.target).prev().find('code')
+                        let text = ''
+                        text_list.each(function () {
+                            text += $(this).text() + '\n'
+                        })
+                        let element = $('<textarea>' + text + '</textarea>')
+                        $('body').append(element)
+                        element[0].select()
+                        document.execCommand('Copy')
+                        element.remove()
+                        //提示信息
+                        this.$message.success('复制成功!')
+                    })
+
+                },
+                //点击搜索
+                search(path = '/search/', target = '_blank') {
+                    let box = document.querySelector('.search')
+                    if (!box.classList.contains('show_search')) {
+                        box.classList.add('show_search')
+                        return
+                    }
+                    if (!this.search_key) {
+                        box.classList.remove('show_search')
+                        return
+                    }
+                    //打开搜索页
+                    window.open(path + '?key=' + this.search_key, name = target)
+                },
+                //初始化搜索值
+                init_search_key() {
+                    let dom = document.querySelector('.search_key_input')
+                    this.search_key = dom.getAttribute('data')
+                },
+                //心情界面 展开子评论
+                mood_show_comment_list(e) {
+                    let div = $(e.target).parent().parent().next()
+                    $(div).slideToggle()
+                },
+                //发布心情
+                mood_add_method() {
+                    axios.post('/api/moods/', this.add_mood).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            this.$refs[`add_mood__${res.self}`].focus()
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        setTimeout(() => {
+                            location.reload()
+                        }, 1000)
+                    })
+                },
+                //删除心情
+                mood_delete(nid, e) {
+                    this.$confirm('此操作将永久删除该心情, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.delete(`/api/moods/${nid}/`).then(res => {
+                            if (res.code) {
+                                this.$message.error(res.msg)
+                                return
+                            }
+                            this.$message.success(res.msg)
+                            setTimeout(() => {
+                                $(e.target).parents('.mood').remove()
+                            }, 500)
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                //打开弹窗
+                mood_comment_dialogVisible_show(nid) {
+                    this.mood_comment_dialogVisible = true
+                    this.mood_comment_add_method.nid = nid
+                },
+                //回复心情
+                mood_comment_add_method() {
+                    let nid = this.mood_comment_add_method.nid
+                    axios.post(`/api/mood_comments/${nid}/`, this.add_mood_comment).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            this.$refs[`add_mood_comment__${res.self}`].focus()
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        setTimeout(() => {
+                            location.reload()
+                        }, 1000)
+                    })
+                },
+                //删除子评论
+                mood_sub_comment_delete(nid, mood_id, e) {
+                    this.$confirm('此操作将永久删除该评论, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.delete(`/api/mood_comments/${nid}/`, {
+                            data: {
+                                mood_id,
+                            }
+                        }).then(res => {
+                            if (res.code) {
+                                this.$message.error(res.msg)
+                                return
+                            }
+                            this.$message.success(res.msg)
+                            setTimeout(() => {
+                                $(e.target).parents('.mood').find('.mood_comment_num').text(`   ${res.data}`)
+                                $(e.target).parents('li').remove()
+                            }, 300)
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                //心情点赞
+                mood_digg(path, nid, e) {
+                    axios.put(`/api/${path}/${nid}/`).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        $(e.target).text(`  ${res.data}`)
+                    })
+                },
+                //请求函数
+                uploadImgFromPaste(file) {
+                    axios.post(`/api/paste_upload/`, { image: file }).then(res => {
+                        this.history.drawing += res.url + '\n'
+                    })
+                },
+                //回忆录 图片粘贴上传
+                paste_upload(e) {
+                    let clipboardData = (e.clipboardData || e.originalEvent.clipboardData)
+                    let items = clipboardData.items, len = items.length, blob = null
+
+                    for (let i = 0; i < len; i++) {
+                        if (items[i].type.indexOf('image') !== -1) {
+                            blob = items[i].getAsFile()
+                        }
+                    }
+                    if (blob !== null) {
+                        let reader = new FileReader()
+                        reader.onload = (event) => {
+                            let base64_str = event.target.result
+                            this.uploadImgFromPaste(base64_str)
+                        }
+                        reader.readAsDataURL(blob)
+                        //e.preventDefault()//阻止默认的粘贴
+                    }
+                },
+
+                history_edit_or_add_method(nid) {
+                    axios.post(`/api/history/` + nid, this.history).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        this.history_dialogVisible = false
+                        setTimeout(() => {
+                            location.reload()
+                        }, 1000)
+                    })
+                },
+
+                //添加回忆录
+                history_add_method(nid) {
+                    if (!nid) {
+                        //添加事件
+                        this.history_edit_or_add_method('')
+                        return
+                    }
+                    //编辑事件
+                    this.history_edit_or_add_method(nid + '/')
+                },
+                //删除回忆录
+                history_remove(nid, e) {
+                    this.$confirm('此操作将永久删除该事件, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.delete(`/api/history/${nid}/`).then(res => {
+                            if (res.code) {
+                                this.$message.error(res.msg)
+                                return
+                            }
+                            this.$message.success(res.msg)
+                            setTimeout(() => {
+                                $(e.target).parents('.timeline-item').remove()
+                            }, 500)
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                //编辑回忆录
+                history_edit_show(e, nid, title, create_date) {
+                    this.history.title = title
+                    this.history.create_date = create_date
+                    let div = e.target
+                    this.history_edit_add = nid
+                    this.history.content = div.getAttribute('content')
+                    this.history.drawing = div.getAttribute('drawing')
+
+                    this.history_dialogVisible = true
+
+                },
+                //还原数据清楚
+                history_handleClose(done) {
+                    this.$confirm('此操作将丢失已修改的数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.history.title = ''
+                        this.history.create_date = new Date()
+                        this.history_edit_add = false
+                        this.history.content = ''
+                        this.history.drawing = ''
+                        done();
+                    })
+                        .catch(() => {
+                        });
+                },
+                //网站导航 添加标签
+                site_edit_add_method(nid) {
+                    axios.post(`/api/site_tag/` + nid, this.site_title).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        setTimeout(() => {
+                            location.reload()
+                        }, 1000)
+                    })
+                },
+                site_add_tag(nid) {
+                    if (!nid) {
+                        //添加标签
+                        this.site_edit_add_method('')
+                        return
+                    }
+                    //编辑标签
+                    this.site_edit_add_method(nid + '/')
+                },
+                //网站导航 编辑标签
+                site_tag_edit_show(nid, title) {
+                    this.site_edit_add = nid
+                    this.site_title.site_title = title
+                    this.site_dialogVisible = true
+                },
+                //清除数据
+                site_tag_handleClose(done) {
+                    this.$confirm('此操作将丢失已修改的数据, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        this.site_edit_add = false
+                        this.site_title.site_title = ''
+                        done()
+                    }).catch(() => {
+                    });
+                },
+                //删除标签
+                site_tag_remove(e, nid) {
+                    this.$confirm('此操作将永久删除该标签, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.delete(`/api/site_tag/${nid}/`).then(res => {
+                            if (res.code) {
+                                this.$message.error(res.msg)
+                                return
+                            }
+                            this.$message.success(res.msg)
+                            setTimeout(() => {
+                                $(e.target).remove()
+                            }, 300)
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                //展示标签下的分类
+                site_tag_tab_show(title) {
+                    this.site_tag_tab = title
+                    this.site_get_data(title, this.site_order)
+                },
+
+                //请求数据
+                site_get_data(title, order) {
+                    let code_title = encodeURIComponent(title) //对特殊字符转义
+                    axios.get(`/api/sites/`, {
+                        params: {
+                            title: code_title,
+                            order,
+                        }
+                    }).then(res => {
+                        this.site_tag_data = res
+                    })
+                },
+                //首次加载site
+                init_site() {
+                    this.site_get_data(this.site_tag_tab, this.site_order)
+                },
+                //添加网站
+                add_site(nid) {
+                    if (!nid) {
+                        axios.post(`/api/sites/`, this.site_info).then(res => {
+                            if (res.code) {
+                                this.$message.error(res.msg)
+                                $(`#site_add__${res.self}`)[0].focus()
+                                return
+                            }
+                            this.$message.success(res.msg)
+                            this.site_add_dialogVisible = false
+                            setTimeout(() => {
+                                location.reload()
+                            }, 300)
+                        })
+                    } else {
+                        axios.put(`/api/sites/${nid}/`, this.site_info).then(res => {
+                            if (res.code) {
+                                this.$message.error(res.msg)
+                                $(`#site_add__${res.self}`)[0].focus()
+                                return
+                            }
+                            this.$message.success(res.msg)
+                            this.site_add_dialogVisible = false
+                            setTimeout(() => {
+                                location.reload()
+                            }, 300)
+                        })
+                    }
+                },
+                //编辑网站卡片
+                site_edie_show(item) {
+                    let tag = []
+                    for (const tagElement of item.tag) {
+                        tag.push(tagElement.nid)
+                    }
+                    this.site_info = {
+                        title: item.title,
+                        abstract: item.abstract,
+                        href: item.href,
+                        icon_href: item.icon_href,
+                        tag,
+                    }
+                    this.site_edit_add_other = item.nid
+                    this.site_add_dialogVisible = true
+
+                },
+                //清楚残留数据
+                site_edit_close(done) {
+                    done()
+                    this.site_edit_add_other = false
+                    this.site_info = {
+                        title: '',
+                        abstract: '',
+                        href: '',
+                        icon_href: '',
+                        tag: [],
+                    }
+
+                },
+                //删除网站卡片
+                site_remove(e, nid) {
+                    this.$confirm('此操作将永久删除该卡片, 是否继续?', '提示', {
+                        confirmButtonText: '确定',
+                        cancelButtonText: '取消',
+                        type: 'warning'
+                    }).then(() => {
+                        axios.delete(`/api/sites/${nid}/`).then(res => {
+                            if (res.code) {
+                                this.$message.error(res.msg)
+                                return
+                            }
+                            this.$message.success(res.msg)
+                            setTimeout(() => {
+                                $(e.target).parent().parent().remove()
+                            }, 300)
+                        })
+                    }).catch(() => {
+                        this.$message({
+                            type: 'info',
+                            message: '已取消删除'
+                        });
+                    });
+                },
+                //网站卡片排序
+                site_order_method(order) {
+                    this.site_order = order
+                    this.site_get_data(this.site_tag_tab, this.site_order)
+                },
+                //网站卡片点赞
+                site_digg(e, item) {
+                    axios.post(`/api/site_digg/${item.nid}/`).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        item.digg_count += 1
+                        $(e.target).parent().addClass('show')
+                        setTimeout(() => {
+                            $(e.target).parent().removeClass('show')
+                        }, 2000)
+                    })
+                },
+                //网站卡片收藏
+                site_collects(e, item) {
+                    axios.post(`/api/site_collect/${item.nid}/`).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        if (res.data === 1) {
+                            $(e.target).parent().addClass('show')
+                        } else if (res.data === -1) {
+                            $(e.target).parent().removeClass('show')
+                        }
+                        item.collects_count += res.data
+                        setTimeout(() => {
+                            location.reload()
+                        }, 500)
+                    })
+                },
+                //申请友链
+                friend_link_add() {
+                    axios.post(`/api/friends_links/`, this.site_info).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            $(`#site_add__${res.self}`)[0].focus()
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        this.friend_links_dialogVisible = false
+
+                    })
+                },
+                //发送网站反馈
+                send_feedback() {
+                    axios.post(`/api/feedback/`, this.feedback).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            $(`#feedback__${res.self}`)[0].focus()
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        this.feedback.content = ''
+                    })
+
+                },
+                //查看加密文章
+                article_pwd_show(nid) {
+                    axios.post(`/api/article_pwd/${nid}/`, { pwd: this.article_pwd }).then(res => {
+                        if (res.code) {
+                            this.$message.error(res.msg)
+                            document.getElementById('article_pwd').focus()
+                            return
+                        }
+                        this.$message.success(res.msg)
+                        location.reload()
+                    })
+                },
+                //首页快捷修改封面
+                show_edit_cover_index(aid, nid) {
+                    this.edit_cover.nid = nid
+                    this.edit_cover.aid = aid
+                    this.edit_cover_index_dialogVisible = true
+                },
+                //确认修改
+                edit_cover_index_method(aid) {
+                    let nid = this.edit_cover.nid
+                    axios.post(`/api/article/cover/${aid}/`, { nid }).then(res => {
+
+
+                    })
+                    location.reload()
+                },
+
+            },
+            watch: {
+                //实时监听
+                'add_mood.drawing'(n, o) {
+                    this.mood_show_drawing = n.split('\n')
+                },
+                //实时监听
+                'history.drawing'(n, o) {
+                    this.history_show_drawing = n.split('\n')
+                }
+
+            },
+        })
+
+
+    </script>
+    {% block js %}
+    <script>
+        //轮播图
+        let menu_img = document.querySelectorAll('.dynamic_shuffl')
+        let banner = document.getElementById('banner_box')
+        let banner_time = Number(banner.getAttribute('banner_time'))
+
+        let banner_slogan = document.getElementById('banner_slogan')
+        let slogan_list = eval(banner_slogan.getAttribute('lis'))
+        let slogan_time = Number(banner_slogan.getAttribute('slogan_time'))
+
+        let slogan_index = 0
+        let slogan_timer = null
+        slogan_timer = setInterval(() => {
+            slogan_index++
+            if (slogan_index === slogan_list.length) {
+                slogan_index = 0
+            }
+            if (!slogan_time) {
+                clearInterval(slogan_timer)
+            } else {
+                banner_slogan.innerText = slogan_list[slogan_index]
+            }
+        }, slogan_time * 1000)
+
+
+        let menu_length = menu_img.length
+        let index = 0
+        let timer = null
+        clearInterval(timer)//清除定时器
+        timer = setInterval(() => {
+            index++
+            if (index === menu_length) {
+                index = 0
+            }
+            for (let i of menu_img) {
+                i.style.opacity = 0
+            }
+            menu_img[index].style.opacity = 1
+            if (!banner_time) {
+                clearInterval(timer)
+            }
+        }, banner_time * 1000) //轮播图轮换时间
+        /////////////////////////////////////
+        //动态导航条变化
+        //let bar = this.$refs.scrollbar.wrap
+
+
+        let slider = document.querySelector('.slide_or_actions')
+        let nav = document.querySelector('.nav_dy')
+        let top1 = 0
+        let path = location.pathname //获取路径
+        if (path.indexOf('article') !== -1) {
+            top1 = $(slider).offset().top - 80
+        }
+        window.onscroll = function () {
+            //计算鼠标至顶部的距离
+            let top = document.documentElement.scrollTop
+            if (path.indexOf('search') === -1) {
+
+                if (top >= 200) {
+                    nav.classList.add('show')
+                } else {
+                    nav.classList.remove('show')
+                }
+            } else {
+                nav.classList.add('show')
+            }
+            if (slider) {
+                if (top >= top1) {
+                    slider.classList.add('fixed')
+                } else {
+                    slider.classList.remove('fixed')
+                }
+            }
+        }
+
+    </script>
+    {% endblock %}
+    {% block article_js %}
+    {% endblock %}
+</body>
+
+</html>

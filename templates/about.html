@@ -1,0 +1,7 @@
+{% extends 'article.html' %}
+
+{% load my_filter custom_tags %}
+
+{% block banner %}
+    {% broadcastMap 'about' %}
+{% endblock %}

@@ -1,0 +1,187 @@
+@media screen and (min-width: 1250px) {
+  #app {
+    .nav_dy {
+      padding: 0 90px;
+
+      > .left {
+        a:nth-last-child(2) {
+          display: none;
+        }
+      }
+    }
+  }
+}
+
+
+@media screen and (max-width: 1250px) and (min-width: 1050px) {
+  .notebook {
+    display: none;
+  }
+  main {
+    width: calc(100% - 180px);
+    padding: 20px 90px;
+  }
+
+  #app {
+    .nav_dy {
+      padding: 0 90px;
+
+      > .left {
+        a:nth-last-child(2) {
+          display: none;
+        }
+      }
+    }
+
+    header {
+      height: 600px;
+
+      .dynamic_shuffl img {
+        height: 600px;
+      }
+    }
+
+    .main {
+      width: 1000px;
+      justify-content: center;
+
+      > .left {
+        width: 43%;
+        margin-right: 20px;
+      }
+
+      .left .essence_article {
+        .body ul li {
+          .left {
+            width: 0;
+            display: none;
+          }
+
+          .right {
+            width: 100%;
+          }
+
+        }
+
+      }
+
+      .left .all_article .body .all_article_ul {
+        li {
+          .left {
+            width: 40%;
+          }
+
+          .right {
+            width: 60%;
+          }
+        }
+
+      }
+
+    }
+
+    .article {
+      width: 100%;
+    }
+
+    .slide_or_actions {
+      z-index: 100;
+      width: 40px;
+      right: 50px;
+    }
+  }
+}
+
+@media screen and (max-width: 1050px) and (min-width: 850px) {
+  .netbook_min {
+    display: none;
+  }
+
+  main {
+    width: calc(100% - 120px);
+    padding: 20px 60px;
+  }
+  #app {
+
+    .nav_dy {
+      padding: 0 90px;
+
+      .left {
+        width: 80%;
+      }
+
+      > .left {
+        a:nth-last-child(2) {
+          display: none;
+        }
+      }
+    }
+
+    header {
+      height: 450px;
+
+      .dynamic_shuffl img {
+        height: 600px;
+
+      }
+    }
+
+    .main {
+      width: 850px;
+
+      > .right {
+        width: 0;
+        display: none;
+      }
+
+      > .left {
+        width: 100%;
+        margin-right: 20px;
+      }
+
+      //精选文章
+      .left .essence_article {
+        .body ul li {
+          .left {
+            width: 40%;
+          }
+
+          .right {
+            width: 60%;
+          }
+
+        }
+
+      }
+
+      //博客文章
+      .left .all_article .body .all_article_ul {
+        li {
+          .left {
+            width: 25%;
+
+            img {
+              width: 100%;
+            }
+          }
+
+          .right {
+            width: 75%;
+          }
+        }
+
+      }
+
+    }
+
+    .article {
+      width: 100%;
+    }
+
+    .slide_or_actions {
+      z-index: 999;
+      width: 40px;
+      right: 30px;
+    }
+  }
+}

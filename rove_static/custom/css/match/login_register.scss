@@ -1,0 +1,38 @@
+@media screen and (max-width: 1050px) and (min-width: 850px) {
+  #app {
+    main {
+      width: 800px;
+      > .right {
+        width: 100%;
+      }
+    }
+  }
+}
+
+
+
+
+@media screen and (max-width: 850px) {
+  #app {
+    main {
+      width: 400px;
+
+      > .left {
+        width: 0;
+        display: none;
+      }
+
+      > .right {
+        width: 100%;
+
+        .login_other .other_text::after {
+          width: 147px;
+        }
+
+        .login_other .other_text::before {
+          width: 117px;
+        }
+      }
+    }
+  }
+}

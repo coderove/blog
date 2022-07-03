@@ -1,0 +1,174 @@
+@charset "UTF-8";
+.add_article_actions {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.el-drawer__body {
+  position: relative;
+}
+
+.add_el_drawer_content {
+  padding: 0 20px;
+}
+.add_el_drawer_content .category_tags .el-collapse-item__content {
+  display: flex;
+  justify-content: space-between;
+}
+.add_el_drawer_content .category_tags .el-collapse-item__content .category {
+  width: 40%;
+}
+.add_el_drawer_content .category_tags .el-collapse-item__content .tag {
+  width: 58%;
+}
+.add_el_drawer_content .article_cover .el-collapse-item__content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.add_el_drawer_content .article_cover .el-collapse-item__content .left {
+  width: 40%;
+}
+.add_el_drawer_content .article_cover .el-collapse-item__content .left img {
+  width: 100%;
+}
+.add_el_drawer_content .article_cover .el-collapse-item__content .right {
+  width: 58%;
+}
+.add_el_drawer_content .article_cover .el-collapse-item__content .right .el-select {
+  width: 100%;
+}
+.add_el_drawer_content .can_choose_ .el-collapse-item__content > div {
+  display: block;
+  margin-bottom: 10px;
+}
+.add_el_drawer_content .article_btn_list {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+}
+
+.select_cover .el-select-dropdown__list li {
+  height: 60px;
+  display: flex;
+  align-items: center;
+}
+.select_cover .el-select-dropdown__list li img {
+  height: 55px;
+  border-radius: 5px;
+}
+.select_cover .el-select-dropdown__list li.selected {
+  background-color: rgba(124, 205, 218, 0.1490196078);
+}
+
+/****************************/
+.el-drawer {
+  background-color: var(--bg_card) !important;
+}
+
+.el-collapse-item__header {
+  background-color: var(--bg_card) !important;
+  color: var(--font_second) !important;
+  border-bottom: 1px solid var(--bg) !important;
+}
+
+.el-collapse-item__wrap {
+  background-color: var(--bg_card) !important;
+  border-bottom: 1px solid var(--bg);
+}
+
+.el-collapse {
+  border-top: 1px solid var(--bg) !important;
+  border-bottom: 1px solid var(--bg) !important;
+}
+
+.el-drawer__header {
+  color: var(--font_second) !important;
+}
+
+/**************/
+.el-textarea__inner {
+  color: var(--font_second) !important;
+  background-color: var(--ele_bg) !important;
+  border: 1px solid var(--bg_plus) !important;
+}
+
+.el-textarea__inner::-webkit-input-placeholder {
+  color: var(--ele_placeholder) !important;
+}
+
+.el-textarea__inner:-ms-input-placeholder {
+  color: var(--ele_placeholder) !important;
+}
+
+.el-textarea__inner::-ms-input-placeholder {
+  color: var(--ele_placeholder) !important;
+}
+
+.el-textarea__inner::placeholder {
+  color: var(--ele_placeholder) !important;
+}
+
+.el-textarea__inner:hover {
+  border-color: var(--ele_placeholder) !important;
+}
+
+.el-input__inner {
+  background-color: var(--ele_bg) !important;
+  border: 1px solid var(--bg_plus) !important;
+  color: var(--font_second) !important;
+}
+
+.el-input__prefix, .el-input__suffix {
+  color: var(--ele_placeholder) !important;
+}
+
+.el-input__inner::-webkit-input-placeholder {
+  color: var(--font_second) !important;
+}
+
+.el-input__inner:-ms-input-placeholder {
+  color: var(--font_second) !important;
+}
+
+.el-input__inner::-ms-input-placeholder {
+  color: var(--font_second) !important;
+}
+
+.el-input__inner::placeholder {
+  color: var(--ele_placeholder) !important;
+}
+
+.el-input__inner:hover {
+  border-color: var(--font_second) !important;
+}
+
+/****下拉***************/
+.el-select-dropdown__item {
+  color: var(--font_second) !important;
+}
+
+.el-select-dropdown {
+  border: 1px solid var(--bg) !important;
+  background-color: var(--bg_card) !important;
+}
+
+.el-select-dropdown.is-multiple .el-select-dropdown__item.selected {
+  color: var(--font_second) !important;
+  background-color: var(--bg) !important;
+}
+
+.el-select-dropdown__item.hover, .el-select-dropdown__item:hover {
+  background-color: #ff847c !important;
+}
+
+/************label**************/
+.el-switch__label {
+  color: #f73859 !important;
+}
+
+.el-switch__label.is-active {
+  color: #11d3bc !important;
+}
+
+/*# sourceMappingURL=add_article.css.map */

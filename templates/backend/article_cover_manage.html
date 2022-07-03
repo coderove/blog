@@ -1,0 +1,45 @@
+{% extends 'backend/backend.html' %}
+
+{% load my_filter %}
+{% block css %}
+    <link rel="stylesheet" href="/static/viewer/css/viewer.css">
+    <link rel="stylesheet" href="/static/custom/css/backend/article_cover_manage.css">
+
+{% endblock %}
+{% block js %}
+
+    <script src="/static/viewer/js/viewer.js"></script>
+    <script>
+        setTimeout(() => {
+            $('.avatar_list').viewer()
+        }, 200)
+    </script>
+
+{% endblock %}
+{% block content %}
+
+    <el-scrollbar style="margin-top: 20px;">
+        <ul class="avatar_list">
+            {% for cover in cover_query %}
+                <li class="{{ cover|calculate_to_cover_count }}">
+                    <div class="delete_icon">
+                        <i @click="avatar_cover_delete('{{ cover.nid }}','cover',$event)"
+                           class="el-icon-delete-solid"></i>
+                    </div>
+                    <img src="{{ cover.url.url }}" alt="">
+                </li>
+            {% endfor %}
+        </ul>
+    </el-scrollbar>
+    <el-upload
+            class="upload-demo"
+            action="/api/upload/cover/"
+            multiple
+            :on-success="avatar_list_success"
+            :before-upload="avatar_list_upload"
+            :headers="avatar_list_headers"
+            list-type="picture">
+        <el-button size="small" type="primary">上传封面</el-button>
+        <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过2MB</div>
+    </el-upload>
+{% endblock %}

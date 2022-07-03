@@ -1,0 +1,22 @@
+.avatar_ul {
+  margin-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  list-style: none;
+
+  > li {
+    margin-bottom: 20px;
+    margin-right: 20px;
+
+    .el-radio {
+      display: flex;
+      align-items: center;
+    }
+
+    img {
+      width: 70px;
+      height: 70px;
+      border-radius: 5px;
+    }
+  }
+}

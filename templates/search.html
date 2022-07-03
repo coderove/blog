@@ -1,0 +1,69 @@
+{% extends 'index.html' %}
+{% load custom_tags my_filter %}
+{% block banner %}
+{% endblock %}
+
+{% block css %}
+    <link rel="stylesheet" href="/static/custom/css/search.css">
+{% endblock %}
+
+{% block main %}
+    <div class="main">
+        <form action="" class="search_box">
+
+            <div>
+                coderove|搜索
+                {#                <img src="/static/custom/img/search/search.png" alt="">#}
+            </div>
+            <div>
+                <input @keydowm.enter="search" name="key" class="search_key_input" type="text" placeholder="搜索你想要的内容"
+                       data="{{ search_key }}"
+                       v-model="search_key">
+            </div>
+            <div>
+                <button>
+                    <i class="fa fa-search"></i>搜索
+                </button>
+            </div>
+        </form>
+        <div class="search_criteria">
+            <ul>
+                {% generate_order_html request 'order' %}
+            </ul>
+            <ul>
+                {% generate_order_html request 'word' %}
+            </ul>
+            <ul>
+                {% generate_order_html request 'tag' %}
+            </ul>
+        </div>
+        <ul class="{{ article_list|is_article_list }}">
+            {% for article in article_list %}
+                <li>
+                    <a href="/article/{{ article.nid }}/" target="_blank" class="img">
+                        <img src="{{ article.cover.url.url }}"
+                             alt="">
+                    </a>
+                    <div class="info">
+                        <div class="title">
+                            <a href="/article/{{ article.nid }}/" target="_blank">{{ article.title }}</a>
+                        </div>
+                        <div class="icon">
+                            <span><i class="fas fa-eye"> {{ article.look_count }}</i></span>
+                            <span><i class="fa fa-clock"></i> {{ article.change_date|date:'Y-d-m' }}</span>
+                        </div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+        <ul class="pager">
+            {{ pager.page_html|safe }}
+        </ul>
+    </div>
+{% endblock %}
+{% block js %}
+    <script>
+        let nav = document.querySelector('.nav_dy')
+        nav.classList.add('show')
+    </script>
+{% endblock %}

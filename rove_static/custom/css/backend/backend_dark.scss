@@ -1,0 +1,105 @@
+.collection_table {
+  border: 1px solid #222831;
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.2); /* 给盒子加阴影 */
+  thead {
+    tr {
+      color: #f06868;
+    }
+  }
+
+  tbody {
+    .tags {
+      i {
+        color: white;
+      }
+
+      i:nth-child(n) {
+        background-color: #6c71c4;
+      }
+
+      i:nth-child(4n+1) {
+        background-color: #FF4500;
+      }
+
+      i:nth-child(4n+2) {
+        background-color: #13ce66;
+      }
+
+      i:nth-child(4n+3) {
+        background-color: #09a8f4;
+      }
+
+    }
+  }
+
+  tr:nth-of-type(odd) {
+    background-color: #393e46 !important;
+
+    &:hover {
+      background-color: #3a4750 !important;
+    }
+  }
+
+  tr:nth-of-type(even) {
+    background-color: #403f48 !important;
+
+    &:hover {
+      background-color: #eceff5;
+    }
+  }
+
+}
+
+
+.cancel_button {
+  color: #000;
+  background-color: #afffdf;
+}
+
+/**********dialog*************/
+.el-dialog {
+  background-color: var(--bg) !important;
+}
+
+.el-dialog__title {
+  color: var(--font_second) !important;
+}
+
+/********input*******/
+
+///////////////input
+.el-input__inner {
+
+  background-color: var(--ele_bg) !important;
+  border: 1px solid var(--bg_plus) !important;
+  color: var(--font_second) !important;
+}
+
+.el-input__prefix, .el-input__suffix {
+  color: var(--ele_placeholder) !important;
+}
+
+.el-input__inner::-webkit-input-placeholder {
+  color: var(--font_second) !important;
+}
+
+.el-input__inner:-ms-input-placeholder {
+  color: var(--font_second) !important;
+}
+
+.el-input__inner::-ms-input-placeholder {
+  color: var(--font_second) !important;
+}
+
+.el-input__inner::placeholder {
+  color: var(--ele_placeholder) !important;
+}
+
+.el-input__inner:hover {
+  border-color: var(--font_second) !important;
+}
+
+/****************普通********************/
+label {
+  color: var(--font_second);
+}
