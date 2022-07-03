@@ -83,22 +83,13 @@ WSGI_APPLICATION = 'blog.wsgi.application'
 #         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'blog',  # 数据库名
-#         'USER': 'blog',  # 用户名
-#         'PASSWORD': '123456',  # 密码
-#         'HOST': '127.0.0.1',  # 地址
-#         'PORT': '3306'  # 端口
-#     }
-# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'blog',  # 数据库名
         'USER': 'blog',  # 用户名
-        'PASSWORD': 'zDR5AiWbBmRLAkFn',  # 密码
+        'PASSWORD': '123456',  # 密码
         'HOST': '127.0.0.1',  # 地址
         'PORT': '3306'  # 端口
     }
@@ -197,19 +188,19 @@ SIMPLEUI_HOME_ICON = 'fa fa-user'
 
 # 发送邮件
 
-# 配置发送邮件的信息  163邮箱
+# 配置发送邮件的信息 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.163.com'
+EMAIL_HOST = 'smtp.xxx.com'
 EMAIL_PORT = 25
 # 发送邮件的邮箱
-EMAIL_HOST_USER = 'wy357733948@163.com'
+EMAIL_HOST_USER = 'xxx@xx.com'
 # 在邮箱中设置的客户端授权密码
-EMAIL_HOST_PASSWORD = 'BNGJLUGSIGXNCMFT'
+EMAIL_HOST_PASSWORD = 'xxxx'
 # 收件人看到的发件人
-EMAIL_FROM = 'code<coderove@163.com>'
+EMAIL_FROM = 'xxxxxx<xxxxxx@xxx.com>'
 
 # 七牛云配置
-QINIU_ACCESS_KEY = 'FVR_SNtU4rqy0H7UehAVm_Mnvkv7hfEfbMXJDyOn'
-QINIU_SECRET_KEY = 'vvCxhyoeCTNJmM4gCE2C4MD4I0J3e0JnZREJiq_a'
-QINIU_BUCKET_NAME = 'coderove-blog'
-QINIU_SERVER_ADDR = 'http://rcxfu5owi.hd-bkt.clouddn.com/'
+QINIU_ACCESS_KEY = 'xxxxxx'
+QINIU_SECRET_KEY = 'xxxxxx'
+QINIU_BUCKET_NAME = 'xxxxxx-xxxxxx'
+QINIU_SERVER_ADDR = 'http://xxxxxx.xxxxxx-xxxxxx.clouddn.com/'
